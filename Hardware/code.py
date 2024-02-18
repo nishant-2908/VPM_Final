@@ -175,7 +175,7 @@ def insert_data(value1: int, value2: int, uid: int):
         "document": {
             "Carbon Dioxide Value": value1,
             "Carbon Monoxide Value": value2,
-            "UID": uid,
+            "UID": str(uid),
             "Object-Type": "Vehicle-Details",
             "Vehicle Number": "",
             "Engine Capacity": "",
