@@ -1,3 +1,3 @@
-# vpm_final
-
-A new Flutter project.
+# vpm
+A flutter project
+Uses Material Theme v3  
