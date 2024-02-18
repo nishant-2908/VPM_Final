@@ -4,7 +4,7 @@
 ### Vehicle Pollution Meter on Google Drive: [Click Here](https://drive.google.com/drive/folders/14_ytu9zTLPmuicV7295uIKxE0pKoQrtl?usp=sharing)
 
 ### Installation on Android:
-Head over to the Releases section of the repository and download the `app-release.apk` file. Locate to the directory where you have downloaded the APK file, click on it to install. Caution: Use 'Install Without Scanning' option while installing. That's done
+Head over to the Releases section of the repository and download the `app-release.apk` file. Locate to the directory where you have downloaded the APK file, click on it to install. Caution: Use **Install Without Scanning** option while installing. That's done.
 ### Installation in Linux:
 Run the following commands in the terminal
 ```
