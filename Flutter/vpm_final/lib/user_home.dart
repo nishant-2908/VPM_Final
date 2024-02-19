@@ -254,10 +254,21 @@ class _UserHomeWidgetState extends State<UserHomeWidget> {
                                           children: [
                                             ElevatedButton(
                                               onPressed: () async {
+                                                Map data =
+                                                    await getVehicleDetails(
+                                                        VNcontroller.text);
+                                                if (data.isEmpty) {
+                                                  setState(() {
+                                                    isFinal = true;
+                                                  });
+                                                }
                                                 var isSuccess =
                                                     await updateTheValue(
                                                         UIDcontroller.text,
-                                                        VNcontroller.text);
+                                                        VNcontroller.text,
+                                                        data['Engine Capacity'],
+                                                        data['Engine Stage'],
+                                                        data['Fuel']);
                                                 if (isSuccess) {
                                                   setState(() {
                                                     isFinal = false;

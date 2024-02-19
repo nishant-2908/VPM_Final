@@ -113,7 +113,8 @@ Future<bool> updateTheSwitch() async {
   return Future.value(true);
 }
 
-Future<bool> updateTheValue(String UID, String VehicleNumber) async {
+Future<bool> updateTheValue(String UID, String VehicleNumber,
+    String EngineCapacity, String EngineStage, String Fuel) async {
   String url =
       "https://ap-south-1.aws.data.mongodb-api.com/app/data-egfvn/endpoint/data/v1/action/updateOne";
   String apiKey =
@@ -126,7 +127,12 @@ Future<bool> updateTheValue(String UID, String VehicleNumber) async {
       "UID": UID,
     },
     "update": {
-      "\$set": {"Vehicle Number": VehicleNumber.toString()}
+      "\$set": {
+        "Vehicle Number": VehicleNumber.toString(),
+        "Engine Capacity": EngineCapacity.toString(),
+        "Engine Stage": EngineStage.toString(),
+        "Fuel": Fuel.toString()
+      }
     },
   };
 
@@ -153,6 +159,39 @@ Future<bool> updateTheValue(String UID, String VehicleNumber) async {
   return Future.value(true);
 }
 
+Future<Map> getVehicleDetails(String VehicleNumber) async {
+  String url =
+      "https://ap-south-1.aws.data.mongodb-api.com/app/data-egfvn/endpoint/data/v1/action/findOne";
+  Map<String, String> headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE',
+    'Access-Control-Allow-Headers':
+        'Origin, X-Requested-With, Content-Type, Accept',
+    'Access-Control-Request-Headers': '*',
+    'api-key':
+        'r6ceRUK4eE7Iez5heqJyDalib5e3CJcCuVJxY8jnq9vqwW5gGZJQLAN6HMFkQVbs',
+  };
+  Map<String, dynamic> body = {
+    "collection": "VP_Vehicles",
+    "database": "VP_Vehicles",
+    "dataSource": "AtlasCluster",
+    "filter": {
+      "Vehicle Number": VehicleNumber,
+    }
+  };
+  final http.Response response = await http.post(
+    Uri.parse(url),
+    headers: headers,
+    body: jsonEncode(body),
+  );
+  var responseBody = jsonDecode(response.body);
+  return responseBody['document'] as Map;
+}
+
 void main() async {
-  updateTheValue("190645", "GJ08BH3021");
+  Map data = await getVehicleDetails("GJ08BH3021");
+  print(data['Engine Number']);
+  print(data['Engine Stage']);
+  print(data['Engine Capacity']);
+  print(data['Fuel Type']);
 }

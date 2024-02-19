@@ -180,6 +180,7 @@ def insert_data(value1: int, value2: int, uid: int):
             "Vehicle Number": "",
             "Engine Capacity": "",
             "Engine Stage": "",
+            "Fuel": "",
         }
     })
     # Defining the headers
