@@ -28,58 +28,64 @@ class _SuccessWidgetState extends State<SuccessWidget> {
                 style: TextStyle(fontSize: 28),
               ),
             ),
-            body: Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.all(19),
-                child: Column(
-                  children: [
-                    Center(
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.circular(50)),
-                        child: const Icon(
-                          Icons.add_task_rounded,
-                          color: Colors.white,
-                          size: 60,
+            body: SingleChildScrollView(
+              child: Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(19),
+                  child: Column(
+                    children: [
+                      Center(
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.circular(50)),
+                          child: const Icon(
+                            Icons.add_task_rounded,
+                            color: Colors.white,
+                            size: 60,
+                          ),
                         ),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        "SUBMITTED",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 26),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          "SUBMITTED",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 26),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 18.0),
-                      child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => MyApp()),
-                            );
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  top: 10, bottom: 10, left: 12.5, right: 12.5),
-                              child: Text(
-                                "Go back Home",
-                                style: TextStyle(
-                                    fontSize: 24, fontFamily: "Fredoka"),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 18.0),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyApp()),
+                              );
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    top: 10,
+                                    bottom: 10,
+                                    left: 12.5,
+                                    right: 12.5),
+                                child: Text(
+                                  "Go back Home",
+                                  style: TextStyle(
+                                      fontSize: 24, fontFamily: "Fredoka"),
+                                ),
                               ),
-                            ),
-                          )),
-                    )
-                  ],
+                            )),
+                      )
+                    ],
+                  ),
                 ),
               ),
             )));

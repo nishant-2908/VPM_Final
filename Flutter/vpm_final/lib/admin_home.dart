@@ -12,7 +12,7 @@ class AdminHomeState extends State<AdminHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AdminHomeWidget(),
+      body: SingleChildScrollView(child: AdminHomeWidget()),
     );
   }
 }
