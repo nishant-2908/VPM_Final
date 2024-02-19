@@ -128,10 +128,10 @@ Future<bool> updateTheValue(String UID, String VehicleNumber,
     },
     "update": {
       "\$set": {
-        "Vehicle Number": VehicleNumber.toString(),
-        "Engine Capacity": EngineCapacity.toString(),
-        "Engine Stage": EngineStage.toString(),
-        "Fuel": Fuel.toString()
+        "Vehicle Number": VehicleNumber,
+        "Engine Capacity": EngineCapacity,
+        "Engine Stage": EngineStage,
+        "Fuel": Fuel
       }
     },
   };
@@ -175,9 +175,7 @@ Future<Map> getVehicleDetails(String VehicleNumber) async {
     "collection": "VP_Vehicles",
     "database": "VP_Vehicles",
     "dataSource": "AtlasCluster",
-    "filter": {
-      "Vehicle Number": VehicleNumber,
-    }
+    "filter": {"Vehicle Number": VehicleNumber, "Tokenized": "No"},
   };
   final http.Response response = await http.post(
     Uri.parse(url),
@@ -185,13 +183,10 @@ Future<Map> getVehicleDetails(String VehicleNumber) async {
     body: jsonEncode(body),
   );
   var responseBody = jsonDecode(response.body);
-  return responseBody['document'] as Map;
+  return responseBody as Map;
 }
 
 void main() async {
-  Map data = await getVehicleDetails("GJ08BH3021");
-  print(data['Engine Number']);
-  print(data['Engine Stage']);
-  print(data['Engine Capacity']);
-  print(data['Fuel Type']);
+  Map details = await getVehicleDetails("GJ08DD7080");
+  print(details);
 }

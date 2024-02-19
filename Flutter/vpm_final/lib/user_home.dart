@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, unused_field, use_key_in_widget_constructors, prefer_const_constructors_in_immutables, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'mongo.dart';
 import 'package:flutter/services.dart';
 import 'success.dart';
@@ -37,6 +38,7 @@ class _UserHomeWidgetState extends State<UserHomeWidget> {
   final VNcontroller = TextEditingController();
   bool _isVisible = false;
   bool isFinal = true;
+  bool isWrong = false;
   @override
   void initState() {
     super.initState();
@@ -257,31 +259,38 @@ class _UserHomeWidgetState extends State<UserHomeWidget> {
                                                 Map data =
                                                     await getVehicleDetails(
                                                         VNcontroller.text);
-                                                if (data.isEmpty) {
+                                                if (data['document'] == null) {
                                                   setState(() {
-                                                    isFinal = true;
+                                                    isWrong = true;
                                                   });
-                                                }
-                                                var isSuccess =
-                                                    await updateTheValue(
-                                                        UIDcontroller.text,
-                                                        VNcontroller.text,
-                                                        data['Engine Capacity'],
-                                                        data['Engine Stage'],
-                                                        data['Fuel']);
-                                                if (isSuccess) {
-                                                  setState(() {
-                                                    isFinal = false;
-                                                  });
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              SuccessWidget()));
                                                 } else {
-                                                  setState(() {
-                                                    isFinal = true;
-                                                  });
+                                                  var isSuccess =
+                                                      await updateTheValue(
+                                                          UIDcontroller.text,
+                                                          VNcontroller.text,
+                                                          data['document'][
+                                                                  'Engine Capacity']
+                                                              .toString(),
+                                                          data['document'][
+                                                                  'Engine Stage']
+                                                              .toString(),
+                                                          data['document']
+                                                                  ['Fuel Type']
+                                                              .toString());
+                                                  if (isSuccess) {
+                                                    setState(() {
+                                                      isFinal = false;
+                                                    });
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                SuccessWidget()));
+                                                  } else {
+                                                    setState(() {
+                                                      isFinal = true;
+                                                    });
+                                                  }
                                                 }
                                               },
                                               child: const Padding(
@@ -290,14 +299,28 @@ class _UserHomeWidgetState extends State<UserHomeWidget> {
                                                     bottom: 20,
                                                     left: 25,
                                                     right: 25),
-                                                child: Text(
-                                                  "Submit",
-                                                  style: TextStyle(
-                                                      fontSize: 24,
-                                                      fontFamily: "Fredoka"),
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      "Submit",
+                                                      style: TextStyle(
+                                                          fontSize: 24,
+                                                          fontFamily:
+                                                              "Fredoka"),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ),
+                                            Visibility(
+                                                visible: isWrong,
+                                                child: const Text(
+                                                  "No vehicle number found or has already been taken",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontSize: 19),
+                                                ))
                                           ],
                                         ),
                                       ),
