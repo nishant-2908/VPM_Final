@@ -162,7 +162,7 @@ def analog_readings(pin1: int, pin2: int):
     lcd.print("CO: ")
     lcd.set_cursor(col=6, row=1)
     lcd.print(str(average2))
-    return average1, average2
+    return average1/10000, average2/10000
 
 # Inserting the data into database
 def insert_data(value1: int, value2: int, uid: int):
