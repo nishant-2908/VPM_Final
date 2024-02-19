@@ -74,7 +74,7 @@ def connect_to_wifi(ssid, password):
             lcd.print("Consider turning")
             lcd.set_cursor(col=0, row=1)
             lcd.print("your hotspot on")
-            sleep(2)
+            sleep(3)
             lcd.clear()
             lcd.home()
             lcd.print("Retrying after")
@@ -82,7 +82,7 @@ def connect_to_wifi(ssid, password):
             lcd.print("3 seconds")
             print("Retrying after 5 seconds") # Trying after 5 seconds
             collect() # Collecting the cache
-            sleep(5)
+            sleep(3)
             lcd.clear()
             lcd.home()
             lcd.print("Retrying..")
