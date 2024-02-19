@@ -9,15 +9,11 @@ from lcd_i2c import LCD
 from random import randint
 from gc import collect
 
-# Defining the UID file
-UID_FILE_NAME = 'uid.txt'
+DEVICE_ADDRESS = 'ADB'
 
 # Defining the SSID and password
 SSID = 'OnePlus7'
 PASSWORD = 'nishantpanchal2908'
-
-# Declaring a list of UID
-list_of_uids = []
 
 # Declaring the API_KEY
 api_key = 'r6ceRUK4eE7Iez5heqJyDalib5e3CJcCuVJxY8jnq9vqwW5gGZJQLAN6HMFkQVbs'
@@ -29,14 +25,6 @@ lcd.begin()
 lcd.backlight()
 lcd.no_cursor()
 
-# Writing data to CSV
-def write_to_file(filename: str, value_of_uid: int):
-    with open(filename, 'a') as write_file:
-        write_file.write(str(value_of_uid))  # Convert the integer to a string
-        write_file.write('\n') # Writing a blank line
-        print("Successfully written to the file")
-        collect()  # Collecting the cache
-    
 # Connecting to the network
 def connect_to_wifi(ssid, password):
     lcd.home()
@@ -99,7 +87,8 @@ def read_data():
         "database": "VP_Data",
         "dataSource": "AtlasCluster",
         "filter": {
-            "ID": "MainSwitch"
+            "ID": "MainSwitch",
+            "Device Address":  DEVICE_ADDRESS,
         }
     })
     headers = {
@@ -124,18 +113,12 @@ def read_data():
     except:
         read_data()
 
-# Generating the UID
-def generate_uid():
-    random_number = randint(100000, 999999) # UID between 100000 and 999999
-    if random_number in list_of_uids: # If UID already exists then
-        generate_uids() # Generate another UID
-    else:
-        lcd.clear()
-        lcd.home()
-        lcd.print("UID: ")
-        lcd.set_cursor(col=6, row=0)
-        lcd.print(str(random_number))
-        return random_number # Else return the original UID
+def device_address():
+    lcd.clear()
+    lcd.home()
+    lcd.print("Device Address: ")
+    lcd.set_cursor(col=6, row=1)
+    lcd.print(DEVICE_ADDRESS)
 
 def analog_readings(pin1: int, pin2: int):
     reading1 = [] # CO2
@@ -165,7 +148,7 @@ def analog_readings(pin1: int, pin2: int):
     return average1/10000, average2/10000
 
 # Inserting the data into database
-def insert_data(value1: int, value2: int, uid: int):
+def insert_data(value1: int, value2: int):
     # Defining the payload in JSON object
     url = "https://ap-south-1.aws.data.mongodb-api.com/app/data-egfvn/endpoint/data/v1/action/insertOne"
     payload = json.dumps({
@@ -175,7 +158,7 @@ def insert_data(value1: int, value2: int, uid: int):
         "document": {
             "Carbon Dioxide Value": value1,
             "Carbon Monoxide Value": value2,
-            "UID": str(uid),
+            "Device Address": DEVICE_ADDRESS,
             "Object-Type": "Vehicle-Details",
             "Vehicle Number": "",
             "Engine Capacity": "",
@@ -198,12 +181,9 @@ def insert_data(value1: int, value2: int, uid: int):
     # Checking if the request made was successful
     if response.status_code == 201:
         print("Data successfully posted")
-        write_to_file('/uid.txt', uid)
-        return uid
     else:
         print("Retrying")
         collect()
-        insert_data(value1, value2, uid)
 
 # Disconnecting the WIFI
 def disconnect_wifi():
@@ -213,7 +193,7 @@ def disconnect_wifi():
     return
 
 # Checking if the process gets completed
-def check_process_completed(uid: int):
+def check_process_completed():
     # Defining the URL
     url = "https://ap-south-1.aws.data.mongodb-api.com/app/data-egfvn/endpoint/data/v1/action/findOne"
     # Defining the payload in JSON
@@ -223,7 +203,7 @@ def check_process_completed(uid: int):
         "dataSource": "AtlasCluster",
         "filter": {
             "Object-Type": "Vehicle-Details",
-            "UID": uid,
+            "Device Address": DEVICE_ADDRESS,
         }
     })
     # Defining the headers
@@ -247,7 +227,7 @@ def check_process_completed(uid: int):
     else:
         collect()
         sleep(2)
-        check_process_completed(uid)
+        check_process_completed()
         
 def update_the_Switch():
     url = "https://ap-south-1.aws.data.mongodb-api.com/app/data-egfvn/endpoint/data/v1/action/updateOne"
@@ -257,7 +237,8 @@ def update_the_Switch():
         "database": "VP_Data",
         "dataSource": "AtlasCluster",
         "filter": {
-            "ID": "MainSwitch"
+            "ID": "MainSwitch",
+            "Device Address": DEVICE_ADDRESS,
         },
         "update": {
         "$set": {
@@ -277,20 +258,6 @@ def update_the_Switch():
     print(response.status_code)
     print(response.text)
 
-with open('/uid.txt', 'r') as file:
-    # Read the contents of the file
-    contents = file.read()
-
-    # Split the contents into lines
-    lines = contents.split('\n')
-
-    # Initialize an empty list to store the values
-    list_of_uids = []
-
-    # Iterate over the lines
-    for line in lines:
-        # Append the line to the list of UIDs
-        list_of_uids.append(line)
 lcd.home()
 lcd.clear()
 lcd.print("Welcome to")
@@ -301,7 +268,5 @@ connect_to_wifi(SSID, PASSWORD)
 read_data()
 co2, co = analog_readings(34, 35)
 print(co2, co)
-uid = generate_uid()
-insert_data(co2, co, uid)
+insert_data(co2, co)
 update_the_Switch()
-write_to_file('/uid.txt', uid)
